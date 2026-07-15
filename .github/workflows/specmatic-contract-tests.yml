@@ -29,10 +29,12 @@ jobs:
 
       - name: Install Specmatic CLI
         run: |
-          curl -sL https://github.com/znsio/specmatic/releases/latest/download/specmatic.jar -o specmatic.jar
-          echo '#!/bin/bash' > /usr/local/bin/specmatic
-          echo 'java -jar '"$(pwd)"'/specmatic.jar "$@"' >> /usr/local/bin/specmatic
-          chmod +x /usr/local/bin/specmatic
+          mkdir -p $GITHUB_WORKSPACE/bin
+          curl -sL https://github.com/znsio/specmatic/releases/latest/download/specmatic.jar -o $GITHUB_WORKSPACE/bin/specmatic.jar
+          echo '#!/bin/bash' > $GITHUB_WORKSPACE/bin/specmatic
+          echo 'java -jar $GITHUB_WORKSPACE/bin/specmatic.jar "$@"' >> $GITHUB_WORKSPACE/bin/specmatic
+          chmod +x $GITHUB_WORKSPACE/bin/specmatic
+          echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
 
       - name: Run Specmatic contract tests
         run: go test -v ./...
