@@ -37,5 +37,5 @@ jobs:
           echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
 
       - name: Run Specmatic contract tests
-        run: go test -v ./...
+        run: go test -tags=specmatic -v ./...
         working-directory: examples/petstore-expanded/stdhttp

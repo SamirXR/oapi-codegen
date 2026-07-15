@@ -1,3 +1,5 @@
+//go:build specmatic
+
 package main_test
 
 import (
@@ -13,10 +15,6 @@ import (
 )
 
 func TestSpecmaticContract(t *testing.T) {
-	if _, err := exec.LookPath("specmatic"); err != nil {
-		t.Skip("specmatic CLI not found in PATH; skipping contract tests")
-	}
-
 	// Start the stdhttp server on a free port
 	srv, err := server.NewServer()
 	if err != nil {
