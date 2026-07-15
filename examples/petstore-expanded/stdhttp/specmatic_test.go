@@ -39,7 +39,7 @@ func TestSpecmaticContract(t *testing.T) {
 	time.Sleep(100 * time.Millisecond)
 
 	// Build and run the specmatic test command
-	cmd := exec.Command("specmatic", "test", "--testBaseURL", fmt.Sprintf("http://127.0.0.1:%d", port), "--filter=STATUS='200'")
+	cmd := exec.Command("specmatic", "test", "--testBaseURL", fmt.Sprintf("http://127.0.0.1:%d", port), "--filter=STATUS='200' || STATUS='204'")
 	cmd.Dir = "." // Run from the current directory
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

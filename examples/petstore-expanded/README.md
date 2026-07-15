@@ -105,3 +105,13 @@ This will automatically:
 To run generative/resiliency tests (which test boundary conditions like null fields, wrong data types, and extra properties) to ensure the server behaves gracefully and doesn't panic or return unexpected 5xx responses:
 
 The test suite enables generative testing by default via the `SPECMATIC_GENERATIVE_TESTS=true` environment variable inside `specmatic_test.go`.
+
+### Issues Found & Fixed via Contract Testing
+
+Specmatic contract testing uncovered two implementation bugs in this codebase:
+
+1. **Null array instead of empty array** (`stdhttp/server/store.go`): `FindPets` returned `null` when no pets existed instead of `[]`. The OpenAPI spec requires an array — fixed by initializing with `make([]api.Pet, 0)`.
+
+2. **Wrong status code for AddPet** (`fiberv3/api/petstore.go`): The Fiber v3 variant returned `201 Created` for `POST /pets`, but the spec defines `200 OK` — fixed to match the contract.
+
+Both bugs were invisible to the existing test client but caught immediately by Specmatic's contract-first validation.

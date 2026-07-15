@@ -1,0 +1,39 @@
+name: Specmatic Contract Tests
+on:
+  push:
+    paths:
+      - 'examples/petstore-expanded/**'
+  pull_request:
+    paths:
+      - 'examples/petstore-expanded/**'
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  contract-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Set up Go
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
+        with:
+          go-version-file: go.mod
+
+      - name: Set up Java (required by Specmatic CLI)
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Specmatic CLI
+        run: |
+          curl -sL https://github.com/znsio/specmatic/releases/latest/download/specmatic.jar -o specmatic.jar
+          echo '#!/bin/bash' > /usr/local/bin/specmatic
+          echo 'java -jar '"$(pwd)"'/specmatic.jar "$@"' >> /usr/local/bin/specmatic
+          chmod +x /usr/local/bin/specmatic
+
+      - name: Run Specmatic contract tests
+        run: go test -v ./...
+        working-directory: examples/petstore-expanded/stdhttp
