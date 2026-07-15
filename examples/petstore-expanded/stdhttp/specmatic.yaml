@@ -1,0 +1,17 @@
+version: 3
+systemUnderTest:
+  service:
+    $ref: "#/components/services/petstoreService"
+components:
+  sources:
+    localFilesystem:
+      filesystem:
+        directory: "."
+  services:
+    petstoreService:
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/localFilesystem"
+            specs:
+              - ../petstore-expanded.yaml
