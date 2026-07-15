@@ -71,7 +71,7 @@ func TestPetStore(t *testing.T) {
 		}
 
 		rr, _ := doPost(t, fiberPetServer, "/pets", newPet)
-		assert.Equal(t, http.StatusCreated, rr.StatusCode)
+		assert.Equal(t, http.StatusOK, rr.StatusCode)
 
 		var resultPet api.Pet
 		err = json.NewDecoder(rr.Body).Decode(&resultPet)

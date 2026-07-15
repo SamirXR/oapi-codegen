@@ -77,3 +77,31 @@ cd examples && go run ./petstore-expanded/common/client/ --port 8080
 ```
 
 The client verifies: add pets, find by ID, 404 on missing pet, list/filter by tag, delete, and empty list after deletion.
+
+## Contract Testing with Specmatic
+
+This example supports contract-driven testing via [Specmatic](https://specmatic.io/). Specmatic runs contract tests against the running server to verify that the implementation conforms exactly to the OpenAPI contract (`petstore-expanded.yaml`).
+
+### Running Contract Tests
+
+The contract tests are integrated directly with Go's native testing framework under the `stdhttp` server variant. To run the contract tests locally:
+
+1. Ensure the `specmatic` CLI is installed (see the [Specmatic Installation Guide](https://docs.specmatic.io/getting_started/installation)).
+2. Run the tests in the `stdhttp` directory:
+
+```sh
+cd examples/petstore-expanded/stdhttp
+go test -v ./...
+```
+
+This will automatically:
+- Spin up the `stdhttp` server on a dynamic port in the background.
+- Execute `specmatic test` targeting that port.
+- Validate request/response parameters, status codes, and headers against the contract using the JSON examples in `petstore-expanded_examples/`.
+- Tear down the server once tests finish.
+
+### Resiliency & Generative Testing
+
+To run generative/resiliency tests (which test boundary conditions like null fields, wrong data types, and extra properties) to ensure the server behaves gracefully and doesn't panic or return unexpected 5xx responses:
+
+The test suite enables generative testing by default via the `SPECMATIC_GENERATIVE_TESTS=true` environment variable inside `specmatic_test.go`.

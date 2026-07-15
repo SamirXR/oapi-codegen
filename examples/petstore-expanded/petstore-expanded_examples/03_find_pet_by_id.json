@@ -1,0 +1,17 @@
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/pets/1000"
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "id": 1000,
+      "name": "Spot",
+      "tag": "dog"
+    }
+  }
+}

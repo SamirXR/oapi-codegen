@@ -101,7 +101,7 @@ func (p *PetStore) AddPet(c fiber.Ctx) error {
 	p.Pets[pet.Id] = pet
 
 	// Now, we have to return the NewPet
-	return c.Status(http.StatusCreated).JSON(pet)
+	return c.Status(http.StatusOK).JSON(pet)
 }
 
 func (p *PetStore) FindPetByID(c fiber.Ctx, id int64) error {
