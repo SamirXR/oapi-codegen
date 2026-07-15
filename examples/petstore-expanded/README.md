@@ -86,7 +86,10 @@ This example supports contract-driven testing via [Specmatic](https://specmatic.
 
 The contract tests are integrated directly with Go's native testing framework under the `stdhttp` server variant. To run the contract tests locally:
 
-1. Ensure the `specmatic` CLI is installed (see the [Specmatic Installation Guide](https://docs.specmatic.io/getting_started/installation)).
+1. Ensure the `specmatic` CLI is installed:
+   - **npm**: `npm install -g specmatic`
+   - **Homebrew (macOS/Linux)**: `brew install znsio/tap/specmatic`
+   - **Direct Jar download**: Download `specmatic.jar` from the [GitHub Releases](https://github.com/znsio/specmatic/releases) and wrap it (e.g. `java -jar specmatic.jar`).
 2. Run the tests in the `stdhttp` directory:
 
 ```sh
