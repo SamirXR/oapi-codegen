@@ -91,7 +91,7 @@ The contract tests are integrated directly with Go's native testing framework un
 
 ```sh
 cd examples/petstore-expanded/stdhttp
-go test -v ./...
+go test -tags=specmatic -v ./...
 ```
 
 This will automatically:
