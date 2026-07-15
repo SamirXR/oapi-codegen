@@ -1,0 +1,8 @@
+NewPet:
+  name: ["Spot", "Fido", "Buddy"]
+  tag: ["dog", "cat", "bird"]
+Pet:
+  id: [1000, 1001, 1002]
+Error:
+  code: [404, 400, 500]
+  message: ["Not Found", "Bad Request", "Internal Server Error"]
