@@ -23,17 +23,15 @@ func TestSpecmaticContract(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to listen on dynamic port: %v", err)
 	}
-	defer listener.Close()
+	defer func() { _ = listener.Close() }()
 
 	port := listener.Addr().(*net.TCPAddr).Port
 	t.Logf("Server listening on port %d", port)
 
 	go func() {
-		if err := srv.Serve(listener); err != nil {
-			// server closed is expected when listener closes
-		}
+		_ = srv.Serve(listener)
 	}()
-	defer srv.Shutdown(context.Background())
+	defer func() { _ = srv.Shutdown(context.Background()) }()
 
 	// Give the server a few milliseconds to start
 	time.Sleep(100 * time.Millisecond)
