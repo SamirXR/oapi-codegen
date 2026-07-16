@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -20,11 +21,29 @@ func NewServer() (*http.Server, error) {
 	swagger.Servers = nil
 
 	petStore := NewPetStore()
-
 	r := http.NewServeMux()
-	api.HandlerFromMux(petStore, r)
+	
+	// Custom error handler to return JSON instead of plain text
+	errorHandler := func(w http.ResponseWriter, message string, statusCode int) {
+		petErr := api.Error{
+			Code:    int32(statusCode),
+			Message: message,
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(statusCode)
+		_ = json.NewEncoder(w).Encode(petErr)
+	}
 
-	h := middleware.OapiRequestValidator(swagger)(r)
+	api.HandlerWithOptions(petStore, api.StdHTTPServerOptions{
+		BaseRouter: r,
+		ErrorHandlerFunc: func(w http.ResponseWriter, r *http.Request, err error) {
+			errorHandler(w, err.Error(), http.StatusBadRequest)
+		},
+	})
+
+	h := middleware.OapiRequestValidatorWithOptions(swagger, &middleware.Options{
+		ErrorHandler: errorHandler,
+	})(r)
 
 	return &http.Server{Handler: h}, nil
 }

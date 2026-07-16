@@ -116,3 +116,13 @@ Integrating Specmatic provides several key advantages:
 - **Specification-First Validation**: Detects contract drift immediately, ensuring the API schema remains the single source of truth.
 - **Resiliency & Fuzzing**: Automatically exercises edge cases (e.g. boundary checks, invalid types) via generative testing to verify backend robustness.
 
+### CI/CD Integration (Fully Automatic)
+
+Specmatic is designed to run completely unattended in CI/CD pipelines (GitHub Actions, GitLab CI, Jenkins). 
+
+By adding the exact same `go test` command to your CI pipeline:
+```yaml
+- name: Run Specmatic Contract Tests
+  run: cd examples/petstore-expanded/stdhttp && go test -tags=specmatic -v ./...
+```
+The CI server will automatically stand up the API, validate it against the OpenAPI spec, and tear it down on every Pull Request, ensuring no breaking changes ever make it to production!

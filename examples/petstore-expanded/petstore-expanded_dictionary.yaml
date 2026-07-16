@@ -6,3 +6,4 @@ Pet:
 Error:
   code: [404, 400, 500]
   message: ["Not Found", "Bad Request", "Internal Server Error"]
+id: [1000]
