@@ -107,6 +107,21 @@ This will automatically:
 
 To run generative/resiliency tests (which test boundary conditions like null fields, wrong data types, and extra properties) to ensure the server behaves gracefully and doesn't panic or return unexpected 5xx responses:
 
+This test verifies externally observable HTTP behavior against the OpenAPI contract; it does not replace Go tests for internal business rules.
+
+### Adapting This Pattern to Another Service
+
+[Specmatic](https://specmatic.io/) sends HTTP requests to the configured `baseUrl`, so those requests pass through the real router, middleware, handlers, business logic, and persistence layer of the running service. It does not automatically validate every internal code path: it validates behavior that is reachable through HTTP and represented by the OpenAPI contract and test data. To apply this pattern outside Petstore:
+
+1. Point the Config V3 contract source at the service's OpenAPI document.
+2. Start the real service in the test harness or an isolated test environment and set its URL as the OpenAPI run option's `baseUrl`.
+3. Prepare deterministic state through public setup APIs, database fixtures, external examples, or a dictionary, and clean it up after the run.
+4. Provide test authentication through protected environment variables or CI secrets when the API is secured.
+5. Configure `swaggerUrl` only when a runtime OpenAPI endpoint is available and implementation coverage is required; it is separate from the `baseUrl` used for test traffic.
+6. Add the contract test to that service's CI workflow and choose coverage criteria appropriate for the service.
+
+The harness and data setup are service-specific: Petstore's `NewPet` seeding and expected IDs must be replaced with the target service's startup and domain fixtures. Contract tests validate observable API behavior, status codes, content types, and schemas; unit and integration tests are still required for calculations, authorization internals, database transactions, events, and other side effects that are not fully expressed by the OpenAPI contract.
+
 The test suite enables generative testing by default via the `SPECMATIC_GENERATIVE_TESTS=true` environment variable inside `specmatic_test.go`.
 
 ### Benefits of Contract Testing
